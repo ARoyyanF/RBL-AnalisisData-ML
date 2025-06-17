@@ -1,3 +1,6 @@
+> [!NOTE]
+> This is our experimental research repository, refer to https://github.com/1magines/CelestiaPraedicere for a finalized & guided usage instructions 
+
 # CelestiaPraedicere: Predicting Celestial Patterns with Machine Learning
 
 <p align="center">
@@ -11,14 +14,11 @@ Beyond just the model, this repository is a complete ecosystem that includes a s
 
 ## 📝 Table of Contents
 * [Key Features](#key-features)
-* [Repository Structure](#repository-structure)
 * [Dataset Deep Dive](#dataset-deep-dive)
   * [The Original Dataset](#the-original-dataset)
   * [The Synthetic Dataset](#the-synthetic-dataset)
 * [Notebook Descriptions](#notebook-descriptions)
 * [Methodology](#methodology)
-* [Installation & Setup](#installation--setup)
-* [Usage Instructions](#usage-instructions)
 * [Further Information & References](#further-information--references)
 
 ## ✨ Key Features
@@ -28,29 +28,12 @@ Beyond just the model, this repository is a complete ecosystem that includes a s
 
 * **Advanced Feature Engineering**: Implements a `distance_r` feature, which is the calculated radial distance of a body from the Sun ($\sqrt{x^2+y^2+z^2}$). This simple yet powerful feature provides the model with critical spatial context that is not immediately apparent from the raw coordinates, significantly boosting its ability to distinguish between orbits.
 
-## 📂 Repository Structure
-The repository is organized to clearly separate data, source code, and results.
-```
-CelestiaPraedicere/
-│
-├── dataset/
-│   ├── solar_system_positions_with_velocity.csv  # Original raw dataset from Kaggle.
-│   └── one_revolution_paths.csv                  # The clean, generated synthetic dataset used for training.
-│
-├── results/
-│   └── (This folder is intended to store outputs like plots, confusion matrices, model files, etc.)
-│
-├── synthetic_generate_data/
-│   └── one-revolution_path.ipynb                 # Jupyter Notebook to generate the synthetic dataset from orbital elements.
-│
-└── multiple-rf.ipynb                             # The main notebook for the entire modeling and prediction workflow.
-```
 
 ## 📊 Dataset Deep Dive
 This project leverages two primary datasets, each serving a distinct purpose in the model development lifecycle.
 
 ### The Original Dataset
-* **File**: `dataset/solar_system_positions_with_velocity.csv`
+* **File**: `solar_system_positions_with_velocity.csv`
 * **Source**: Adapted from the [Solar System Bodies Positions (2020-2024) on Kaggle](https://www.kaggle.com/datasets/nikitamanaenkov/solar-system-bodies-positions-2020-2024/data).
 * **Description**: This dataset contains real-world observational data. It is rich with high-fidelity information, including the heliocentric position (`x_au`, `y_au`, `z_au`) and velocity (`vx`, `vy`, `vz`) of hundreds of celestial bodies at various timestamps.
 * **Challenge**: The primary drawback of this dataset is the presence of "noisy" and ambiguous labels. For instance, it lists both `'1 MERCURY BARYCENTER'` and `'199 MERCURY'`. These are essentially the same object from a positional standpoint, which confuses the classification model, degrades its performance, and makes evaluation unreliable. This label ambiguity was the core motivation for synthesizing a cleaner dataset.
@@ -72,7 +55,7 @@ This project leverages two primary datasets, each serving a distinct purpose in 
     4.  **Tiered Model Training**: Trains the two separate Random Forest models (planet-detector and moon-detector).
     5.  **Evaluation**: Assesses the model's performance using metrics like accuracy, precision, recall, and visualizes the results with a confusion matrix.
 
-* **`synthetic_generate_data/one-revolution_path.ipynb`**:
+* **`one-revolution_path.ipynb`**:
   * **Purpose**: To programmatically generate the `one_revolution_paths.csv` file used in the main notebook.
   * **Process**: This notebook takes a table of fundamental orbital elements (e.g., semi-major axis, eccentricity, inclination) as input. It then uses a propagation function, based on celestial mechanics, to calculate 200 distinct (x, y, z) positional coordinates that trace one complete, smooth orbit for each celestial body.
 
@@ -91,46 +74,6 @@ The core of this project is the tiered classification model (`multiple-rf.ipynb`
     * **SMOTE (Synthetic Minority Over-sampling Technique)** is applied to the training sets of both models. This technique creates synthetic data points for the minority classes (especially smaller or more distant moons), ensuring the models do not become biased towards the majority classes and can learn to identify all objects effectively.
     * **Feature Engineering (`distance_r`)** provides the models with explicit information about an object's distance from the sun, a critical factor in determining its identity, which helps to significantly improve classification accuracy.
 
-## ⚙️ Installation & Setup
-To set up and run this project in your local environment, please follow these detailed steps:
-
-1.  **Clone the Repository**
-    Open your terminal or command prompt and clone the repository to your local machine.
-    ```bash
-    git clone [https://github.com/1magines/CelestiaPraedicere.git](https://github.com/1magines/CelestiaPraedicere.git)
-    cd CelestiaPraedicere
-    ```
-
-2.  **Create and Activate a Virtual Environment (Strongly Recommended)**
-    Using a virtual environment prevents conflicts with other Python projects.
-    ```bash
-    # Create the environment
-    python -m venv venv
-    
-    # Activate the environment
-    # On Windows:
-    venv\Scripts\activate
-    # On macOS/Linux:
-    source venv/bin/activate
-    ```
-    You will know it's active when you see `(venv)` at the beginning of your terminal prompt.
-
-3.  **Install Dependencies**
-    This project requires several key Python libraries. A `requirements.txt` is not provided, so you can install them directly using pip. Ensure your virtual environment is active.
-    ```bash
-    pip install pandas numpy scikit-learn "imblearn>=0.8" jupyterlab matplotlib seaborn
-    ```
-
-## 🚀 Usage Instructions
-To see the model training process, evaluate its performance, and understand the core logic:
-1.  Ensure you are in the project's root directory (`CelestiaPraedicere/`) in your terminal.
-2.  Make sure your virtual environment (`venv`) is activated.
-3.  Start the Jupyter Lab server:
-    ```bash
-    jupyter lab
-    ```
-4.  Your browser will open with the Jupyter interface. Use the file navigator on the left to open the **`multiple-rf.ipynb`** notebook.
-5.  You can run the cells sequentially ("Run" -> "Run All Cells") or one by one to see the output of each step, including data loading, model training, and the final classification report and confusion matrix.
 
 ## ℹ️ Further Information & References
 * **Project Presentation**: For a more guided and visual explanation of the project's background, methodology, and results, please see our detailed presentation hosted on the Open Science Framework (OSF).
